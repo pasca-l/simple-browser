@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  browser:
+    build: .
+    platform: linux/amd64
+    volumes:
+      - type: bind
+        source: ./browser
+        target: /home/local/
+    stdin_open: true
+    tty: true
+    ports:
+      - 8000:8000

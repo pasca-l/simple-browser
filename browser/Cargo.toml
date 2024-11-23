@@ -3,5 +3,18 @@ name = "browser"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["core", "net/std"]
+
+[features]
+default = ["cui"]
+cui = ["dep:net_std"]
+
+[[bin]]
+name = "saba"
+path = "src/main.rs"
+required-features = ["cui"]
+
 [dependencies]
-noli = { git = "https://github.com/hikalium/wasabi.git", branch = "for_saba" }
+browser_core = { path = "./core" }
+net_std = { path = "./net/std", optional = true}

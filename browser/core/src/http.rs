@@ -2,7 +2,6 @@ use alloc::format;
 use alloc::string::String;
 use alloc::vec::Vec;
 use crate::alloc::string::ToString;
-
 use crate::error::Error;
 
 #[derive(Debug, Clone)]

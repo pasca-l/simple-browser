@@ -291,8 +291,8 @@ impl Iterator for HtmlTokenizer {
                 State::BeforeAttributeName => {
                     if c == '/' || c == '>' || self.is_eof() {
                         self.reconsume = true;
-                        self.state = State::AttributeName;
-                        self.start_new_attribute();
+                        self.state = State::AfterAttributeName;
+                        continue;
                     }
 
                     self.reconsume = true;

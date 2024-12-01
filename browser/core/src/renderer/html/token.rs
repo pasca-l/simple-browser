@@ -1,6 +1,6 @@
+use crate::renderer::html::attribute::Attribute;
 use alloc::string::String;
 use alloc::vec::Vec;
-use crate::renderer::html::attribute::Attribute;
 
 // There are 80 states defined in `HTML Living Standard`,
 // but only 17 will be implemented, with addition to `TemporaryBuffer` state
@@ -51,13 +51,10 @@ pub enum HtmlToken {
         self_closing: bool,
         attributes: Vec<Attribute>,
     },
-
     EndTag {
         tag: String,
     },
-
     Char(char),
-
     Eof,
 }
 
@@ -105,9 +102,7 @@ impl HtmlTokenizer {
                 attributes: Vec::new(),
             });
         } else {
-            self.latest_token = Some(HtmlToken::EndTag {
-                tag: String::new(),
-            })
+            self.latest_token = Some(HtmlToken::EndTag { tag: String::new() })
         }
     }
 
@@ -122,7 +117,7 @@ impl HtmlTokenizer {
                     self_closing: _,
                     attributes: _,
                 }
-                | HtmlToken::EndTag {ref mut tag} => tag.push(c),
+                | HtmlToken::EndTag { ref mut tag } => tag.push(c),
                 _ => panic!("should be StartTag or EndTag for appending tag"),
             }
         }
@@ -160,7 +155,7 @@ impl HtmlTokenizer {
 
                     attributes[len - 1].add_char(c, is_name);
                 }
-                _ => panic!("should be StartTag for appending attribute")
+                _ => panic!("should be StartTag for appending attribute"),
             }
         }
     }
@@ -175,7 +170,7 @@ impl HtmlTokenizer {
                     ref mut self_closing,
                     attributes: _,
                 } => *self_closing = true,
-                _ => panic!("should be StartTag for setting closing flag")
+                _ => panic!("should be StartTag for setting closing flag"),
             }
         }
     }
@@ -512,7 +507,10 @@ impl Iterator for HtmlTokenizer {
                         continue;
                     }
 
-                    let c = self.buf.chars().nth(0)
+                    let c = self
+                        .buf
+                        .chars()
+                        .nth(0)
                         .expect("self.buf should have at least 1 char");
                     self.buf.remove(0);
                     return Some(HtmlToken::Char(c));

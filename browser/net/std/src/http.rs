@@ -1,3 +1,4 @@
+use browser_core::http::HttpResponse;
 use dns_lookup::lookup_host;
 use std::io::prelude::*;
 use std::io::ErrorKind;
@@ -5,7 +6,6 @@ use std::io::Read;
 use std::net::TcpStream;
 use std::string::String;
 use std::vec::Vec;
-use browser_core::http::HttpResponse;
 
 pub struct HttpClient {}
 

@@ -1,5 +1,4 @@
 use alloc::rc::Rc;
-// use alloc::rc::Weak;
 use crate::renderer::dom::node::Element;
 use crate::renderer::dom::node::ElementKind;
 use crate::renderer::dom::node::Node;
@@ -15,7 +14,6 @@ use core::str::FromStr;
 
 #[derive(Debug, Clone)]
 pub struct HtmlParser {
-    // browser: Weak<RefCell<Browser>>,
     window: Rc<RefCell<Window>>,
     mode: InsertionMode,
     // https://html.spec.whatwg.org/multipage/parsing.html#original-insertion-mode
@@ -26,11 +24,8 @@ pub struct HtmlParser {
 }
 
 impl HtmlParser {
-    // pub fn new(browser: Weak<RefCell<Browser>>, t: HtmlTokenizer) -> Self {
     pub fn new(t: HtmlTokenizer) -> Self {
         Self {
-            // browser: browser.clone(),
-            // window: Rc::new(RefCell::new(Window::new(browser))),
             window: Rc::new(RefCell::new(Window::new())),
             mode: InsertionMode::Initial,
             original_insertion_mode: InsertionMode::Initial,
@@ -229,15 +224,6 @@ impl HtmlParser {
                             }
                         }
 
-                        // Some(HtmlToken::EndTag { ref tag }) => {
-                        //     // Any other end tag
-                        //     // Parse error. Ignore the token.
-                        //     if tag != "head" || tag != "body" || tag != "html" || tag != "br" {
-                        //         // Ignore the token.
-                        //         token = self.t.next();
-                        //         continue;
-                        //     }
-                        // }
                         Some(HtmlToken::Eof) | None => {
                             return self.window.clone();
                         }
@@ -382,18 +368,6 @@ impl HtmlParser {
                             ref attributes,
                         }) => {
                             match tag.as_str() {
-                                // "script" | "style" => {
-                                //     // Process the token using the rules for the "in head" insertion mode.
-                                //     //
-                                //     // https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
-                                //     // Switch the tokenizer to the script data state.
-                                //     self.insert_element(tag, attributes.to_vec());
-                                //     self.t.switch_context(State::ScriptData);
-                                //     self.original_insertion_mode = self.mode;
-                                //     self.mode = InsertionMode::Text;
-                                //     token = self.t.next();
-                                //     continue;
-                                // }
                                 "h1" | "h2" => {
                                     self.insert_element(tag, attributes.to_vec());
                                     token = self.t.next();
@@ -596,10 +570,8 @@ mod tests {
 
     #[test]
     fn test_empty() {
-        // let browser = Browser::new();
         let html = "".to_string();
         let t = HtmlTokenizer::new(html);
-        // let window = HtmlParser::new(Rc::downgrade(&browser), t).construct_tree();
         let window = HtmlParser::new(t).construct_tree();
         let expected = Rc::new(RefCell::new(Node::new(NodeKind::Document)));
 
@@ -608,10 +580,8 @@ mod tests {
 
     #[test]
     fn test_body() {
-        // let browser = Browser::new();
         let html = "<html><head></head><body></body></html>".to_string();
         let t = HtmlTokenizer::new(html);
-        // let window = HtmlParser::new(Rc::downgrade(&browser), t).construct_tree();
         let window = HtmlParser::new(t).construct_tree();
         let document = window.borrow().document();
 
@@ -659,10 +629,8 @@ mod tests {
 
     #[test]
     fn test_text() {
-        // let browser = Browser::new();
         let html = "<html><head></head><body>text</body></html>".to_string();
         let t = HtmlTokenizer::new(html);
-        // let window = HtmlParser::new(Rc::downgrade(&browser), t).construct_tree();
         let window = HtmlParser::new(t).construct_tree();
         let document = window.borrow().document();
 
@@ -710,10 +678,8 @@ mod tests {
 
     #[test]
     fn test_multiple_nodes() {
-        // let browser = Browser::new();
         let html = "<html><head></head><body><p><a foo=bar>text</a></p></body></html>".to_string();
         let t = HtmlTokenizer::new(html);
-        // let window = HtmlParser::new(Rc::downgrade(&browser), t).construct_tree();
         let window = HtmlParser::new(t).construct_tree();
         let document = window.borrow().document();
 
@@ -775,64 +741,4 @@ mod tests {
             text
         );
     }
-
-    // #[test]
-    // fn test_no_body_tag() {
-    //     let browser = Browser::new();
-    //     let html = "<p>a</p>".to_string();
-    //     let t = HtmlTokenizer::new(html);
-    //     let window = HtmlParser::new(Rc::downgrade(&browser), t).construct_tree();
-    //     let document = window.borrow().document();
-    //     assert_eq!(
-    //         Rc::new(RefCell::new(Node::new(NodeKind::Document))),
-    //         document
-    //     );
-
-    //     let html = document
-    //         .borrow()
-    //         .first_child()
-    //         .expect("failed to get a first child of document");
-    //     assert_eq!(
-    //         Rc::new(RefCell::new(Node::new(NodeKind::Element(Element::new(
-    //             "html",
-    //             Vec::new()
-    //         ))))),
-    //         html
-    //     );
-
-    //     let head = html
-    //         .borrow()
-    //         .first_child()
-    //         .expect("failed to get a first child of html");
-    //     assert_eq!(
-    //         Rc::new(RefCell::new(Node::new(NodeKind::Element(Element::new(
-    //             "head",
-    //             Vec::new()
-    //         ))))),
-    //         head
-    //     );
-
-    //     let body = head
-    //         .borrow()
-    //         .next_sibling()
-    //         .expect("failed to get a next sibling of head");
-    //     assert_eq!(
-    //         Rc::new(RefCell::new(Node::new(NodeKind::Element(Element::new(
-    //             "body",
-    //             Vec::new()
-    //         ))))),
-    //         body
-    //     );
-
-    //     let p = body
-    //         .borrow()
-    //         .first_child()
-    //         .expect("failed to get a first child of body");
-    //     assert_eq!(
-    //         Rc::new(RefCell::new(Node::new(NodeKind::Element(Element::new(
-    //             "p",
-    //             Vec::new()
-    //         ))))),
-    //         p
-    //     );
 }

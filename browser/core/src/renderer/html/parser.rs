@@ -1,10 +1,10 @@
 use alloc::rc::Rc;
-use crate::renderer::dom::node::Element;
-use crate::renderer::dom::node::ElementKind;
-use crate::renderer::dom::node::Node;
-use crate::renderer::dom::node::NodeKind;
-use crate::renderer::dom::node::Window;
-use crate::renderer::html::attribute::Attribute;
+use crate::renderer::html::dom::Element;
+use crate::renderer::html::dom::ElementKind;
+use crate::renderer::html::dom::Node;
+use crate::renderer::html::dom::NodeKind;
+use crate::renderer::html::dom::Window;
+use crate::renderer::html::helper::attribute::Attribute;
 use crate::renderer::html::token::HtmlToken;
 use crate::renderer::html::token::HtmlTokenizer;
 use alloc::string::String;

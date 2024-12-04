@@ -1,4 +1,4 @@
-use crate::renderer::html::attribute::Attribute;
+use crate::renderer::html::helper::attribute::Attribute;
 use alloc::format;
 use alloc::rc::{Rc, Weak};
 use alloc::string::String;

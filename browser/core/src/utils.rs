@@ -1,4 +1,4 @@
-use crate::renderer::dom::node::Node;
+use crate::renderer::html::dom::Node;
 use alloc::format;
 use alloc::rc::Rc;
 use alloc::string::String;

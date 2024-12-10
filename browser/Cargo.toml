@@ -4,17 +4,18 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = ["core", "net/std"]
+members = ["core", "net/std", "ui/cui"]
 
 [features]
 default = ["cui"]
-cui = ["dep:net_std"]
+cui = ["dep:net_std", "dep:ui_cui"]
 
 [[bin]]
-name = "saba"
+name = "browser"
 path = "src/main.rs"
 required-features = ["cui"]
 
 [dependencies]
 browser_core = { path = "./core" }
 net_std = { path = "./net/std", optional = true}
+ui_cui = { path = "./ui/cui", optional = true }

@@ -1,4 +1,3 @@
-use alloc::rc::Rc;
 use crate::renderer::html::dom::Element;
 use crate::renderer::html::dom::ElementKind;
 use crate::renderer::html::dom::Node;
@@ -7,6 +6,7 @@ use crate::renderer::html::dom::Window;
 use crate::renderer::html::helper::attribute::Attribute;
 use crate::renderer::html::token::HtmlToken;
 use crate::renderer::html::token::HtmlTokenizer;
+use alloc::rc::Rc;
 use alloc::string::String;
 use alloc::vec::Vec;
 use core::cell::RefCell;
@@ -366,31 +366,29 @@ impl HtmlParser {
                             ref tag,
                             self_closing: _,
                             ref attributes,
-                        }) => {
-                            match tag.as_str() {
-                                "h1" | "h2" => {
-                                    self.insert_element(tag, attributes.to_vec());
-                                    token = self.t.next();
-                                    continue;
-                                }
-
-                                "p" => {
-                                    self.insert_element(tag, attributes.to_vec());
-                                    token = self.t.next();
-                                    continue;
-                                }
-
-                                "a" => {
-                                    self.insert_element(tag, attributes.to_vec());
-                                    token = self.t.next();
-                                    continue;
-                                }
-
-                                _ => {
-                                    token = self.t.next();
-                                }
+                        }) => match tag.as_str() {
+                            "h1" | "h2" => {
+                                self.insert_element(tag, attributes.to_vec());
+                                token = self.t.next();
+                                continue;
                             }
-                        }
+
+                            "p" => {
+                                self.insert_element(tag, attributes.to_vec());
+                                token = self.t.next();
+                                continue;
+                            }
+
+                            "a" => {
+                                self.insert_element(tag, attributes.to_vec());
+                                token = self.t.next();
+                                continue;
+                            }
+
+                            _ => {
+                                token = self.t.next();
+                            }
+                        },
 
                         Some(HtmlToken::EndTag { ref tag }) => match tag.as_str() {
                             "body" => {

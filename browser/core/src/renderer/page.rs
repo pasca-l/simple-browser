@@ -1,4 +1,3 @@
-// use crate::alloc::string::ToString;
 use crate::browser::Browser;
 use crate::display_item::DisplayItem;
 use crate::http::HttpResponse;
@@ -6,11 +5,14 @@ use crate::renderer::css::cssom::StyleSheet;
 use crate::renderer::css::parser::CssParser;
 use crate::renderer::css::token::CssTokenizer;
 use crate::renderer::html::dom::Window;
+use crate::renderer::html::helper::api::get_js_content;
 use crate::renderer::html::helper::api::get_style_content;
 use crate::renderer::html::parser::HtmlParser;
 use crate::renderer::html::token::HtmlTokenizer;
+use crate::renderer::js::ast::JsParser;
+use crate::renderer::js::runtime::JsRuntime;
+use crate::renderer::js::token::JsLexer;
 use crate::renderer::layout::layout_view::LayoutView;
-// use crate::utils::convert_dom_to_string;
 use alloc::rc::Rc;
 use alloc::rc::Weak;
 use alloc::string::String;
@@ -52,17 +54,11 @@ impl Page {
     pub fn receive_response(&mut self, response: HttpResponse) {
         self.create_frame(response.body());
 
+        self.execute_js();
+
         self.set_layout_view();
 
         self.paint_tree();
-
-        // if let Some(frame) = &self.frame {
-        //     let dom = frame.borrow().document().clone();
-        //     let debug = convert_dom_to_string(&Some(dom));
-        //     return debug;
-        // }
-
-        // "".to_string()
     }
 
     fn create_frame(&mut self, html: String) {
@@ -98,5 +94,21 @@ impl Page {
         if let Some(layout_view) = &self.layout_view {
             self.display_items = layout_view.paint();
         }
+    }
+
+    fn execute_js(&mut self) {
+        let dom = match &self.frame {
+            Some(frame) => frame.borrow().document(),
+            None => return,
+        };
+
+        let js = get_js_content(dom.clone());
+        let lexer = JsLexer::new(js);
+
+        let mut parser = JsParser::new(lexer);
+        let ast = parser.parse_ast();
+
+        let mut runtime = JsRuntime::new(dom);
+        runtime.execute(&ast);
     }
 }

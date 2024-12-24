@@ -1,0 +1,5 @@
+FROM --platform=arm64 python:3.13.1-slim-bookworm
+
+WORKDIR /home/local/
+
+CMD [ "python", "-m", "http.server", "8080" ]

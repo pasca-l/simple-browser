@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <style>
+      #title {
+        color: red;
+      }
+      .first {
+        color: #0000ff;
+      }
+      .hidden {
+        display: none;
+      }
+      .lint {
+        background-color: #00ffff;
+      }
+    </style>
+    <script type="text/javascript">
+      function add(a, b) {
+        return a + b;
+      }
+      var target = document.getElementById("target");
+      target.textContent = "1 + 2 = " + add(1, 2);
+    </script>
+  </head>
+  <body>
+    <h1 id="title">Simple browser</h1>
+    <p class="first">
+      This browser has HTML and CSS parser, and JavaScript engine made from
+      scratch!
+    </p>
+    <p>
+      <a href="http://server:8080/test.html" class="link">Test page</a>
+      <a href="http://example.com" class="link">Example page</a>
+    </p>
+    <p class="hidden">none</p>
+    <p id="target">original text</p>
+  </body>
+</html>

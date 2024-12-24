@@ -1,33 +1,14 @@
 extern crate alloc;
 
-// use crate::alloc::string::ToString;
-use browser_core::browser::Browser;
-// use browser_core::http::HttpResponse;
 use alloc::rc::Rc;
 use alloc::string::String;
+use browser_core::browser::Browser;
 use browser_core::error::Error;
 use browser_core::http::HttpResponse;
 use browser_core::url::Url;
 use core::cell::RefCell;
 use net_std::http::HttpClient;
 use ui_cui::app::Tui;
-
-// static TEST_HTTP_RESPONSE: &str = r#"HTTP/1.1 200 OK
-// Data: xx xx xx
-
-// <html>
-// <head></head>
-// <body>
-//     <h1 id="title">H1 title</h1>
-//     <h2 class="class">H2 title</h2>
-//     <p>Test text.</p>
-//     <p>
-//         <a href="example.com">Link1</a>
-//         <a href="example.com">Link2</a>
-//     </p>
-// </body>
-// </html>
-// "#;
 
 fn handle_url(url: String) -> Result<HttpResponse, Error> {
     // parse url
@@ -100,14 +81,4 @@ fn main() {
             println!("browser fails to start {:?}", e);
         }
     };
-
-    // let response =
-    //     HttpResponse::new(TEST_HTTP_RESPONSE.to_string()).expect("failed to parse http response");
-    // let page = browser.borrow().current_page();
-    // page.borrow_mut().receive_response(response);
-
-    // let dom_string = page.borrow_mut().receive_response(response);
-    // for log in dom_string.lines() {
-    //     println!("{}", log);
-    // }
 }

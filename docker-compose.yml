@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   browser:
     build: .
@@ -10,5 +8,27 @@ services:
         target: /home/local/
     stdin_open: true
     tty: true
+    networks:
+      - net
     ports:
       - 8000:8000
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    platform: linux/amd64
+    volumes:
+      - type: bind
+        source: ./server
+        target: /home/local/
+    stdin_open: true
+    tty: true
+    networks:
+      - net
+    ports:
+      - 8080:8080
+
+networks:
+  net:
+    driver: bridge

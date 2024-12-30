@@ -8,6 +8,6 @@ edition = "2021"
 [dependencies]
 browser_core = { path = "../../core"}
 net_std = { path = "../../net/std"}
-tui = "0.19"
+ratatui = "0.29.0"
 crossterm = "0.25"
 unicode-width = "0.1.10"

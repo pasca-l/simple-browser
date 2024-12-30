@@ -11,7 +11,7 @@ default = ["cui"]
 cui = ["dep:net_std", "dep:ui_cui"]
 
 [[bin]]
-name = "browser"
+name = "cui_browser"
 path = "src/main.rs"
 required-features = ["cui"]
 

@@ -4,18 +4,25 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = ["core", "net/std", "ui/cui"]
+members = ["core", "net/std", "ui/cui", "ui/gui"]
 
 [features]
-default = ["cui"]
+default = []
 cui = ["dep:net_std", "dep:ui_cui"]
+gui = ["dep:net_std", "dep:ui_gui"]
 
 [[bin]]
 name = "cui_browser"
 path = "src/main.rs"
 required-features = ["cui"]
 
+[[bin]]
+name = "gui_browser"
+path = "src/main.rs"
+required-features = ["gui"]
+
 [dependencies]
 browser_core = { path = "./core" }
 net_std = { path = "./net/std", optional = true}
 ui_cui = { path = "./ui/cui", optional = true }
+ui_gui = { path = "./ui/gui", optional = true }

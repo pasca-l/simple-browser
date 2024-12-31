@@ -1,81 +1,27 @@
 extern crate alloc;
 
 use alloc::rc::Rc;
-use alloc::string::String;
 use browser_core::browser::Browser;
-use browser_core::error::Error;
-use browser_core::http::HttpResponse;
-use browser_core::url::Url;
 use core::cell::RefCell;
-use net_std::http::HttpClient;
-use ui_cui::app::Tui;
 
-fn handle_url(url: String) -> Result<HttpResponse, Error> {
-    // parse url
-    let parsed_url = match Url::new(url.to_string()).parse() {
-        Ok(url) => url,
-        Err(e) => {
-            return Err(Error::UnexpectedInput(format!(
-                "input html is not supported: {:?}",
-                e
-            )));
-        }
-    };
+mod handler;
 
-    // send a HTTP request and get a response
-    let client = HttpClient::new();
-    let response = match client.get(
-        parsed_url.host(),
-        parsed_url
-            .port()
-            .parse::<u16>()
-            .unwrap_or_else(|_| panic!("port number should be u16 but got {}", parsed_url.port())),
-        parsed_url.path(),
-    ) {
-        Ok(res) => {
-            // redirect to Location
-            if res.status_code() == 302 {
-                let location = match res.header_value("Location") {
-                    Ok(value) => value,
-                    Err(_) => return Ok(res),
-                };
-                let redirect_parsed_url = Url::new(location);
+#[cfg(feature = "cui")]
+fn create_ui(browser: Rc<RefCell<Browser>>) -> Rc<RefCell<ui_cui::app::Tui>> {
+    Rc::new(RefCell::new(ui_cui::app::Tui::new(browser)))
+}
 
-                let redirect_client = HttpClient::new();
-                match redirect_client.get(
-                    redirect_parsed_url.host(),
-                    redirect_parsed_url
-                        .port()
-                        .parse::<u16>()
-                        .unwrap_or_else(|_| {
-                            panic!("port number should be u16 but got {}", parsed_url.port())
-                        }),
-                    redirect_parsed_url.path(),
-                ) {
-                    Ok(res) => res,
-                    Err(e) => return Err(Error::Network(format!("{:?}", e))),
-                }
-            } else {
-                res
-            }
-        }
-        Err(e) => {
-            return Err(Error::Network(format!(
-                "failed to get http response: {:?}",
-                e
-            )))
-        }
-    };
-
-    Ok(response)
+#[cfg(feature = "gui")]
+fn create_ui(browser: Rc<RefCell<Browser>>) -> Rc<RefCell<ui_gui::app::WasabiUI>> {
+    Rc::new(RefCell::new(ui_gui::app::WasabiUI::new(browser)))
 }
 
 fn main() {
     let browser = Browser::new();
 
-    let ui = Rc::new(RefCell::new(Tui::new(browser)));
+    let ui = create_ui(browser);
 
-    match ui.borrow_mut().start(handle_url) {
+    match ui.borrow_mut().start(handler::handle_url) {
         Ok(_) => {}
         Err(e) => {
             println!("browser fails to start {:?}", e);

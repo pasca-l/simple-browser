@@ -12,8 +12,8 @@ fn create_ui(browser: Rc<RefCell<Browser>>) -> Rc<RefCell<ui_cui::app::Tui>> {
 }
 
 #[cfg(feature = "gui")]
-fn create_ui(browser: Rc<RefCell<Browser>>) -> Rc<RefCell<ui_gui::app::WasabiUI>> {
-    Rc::new(RefCell::new(ui_gui::app::WasabiUI::new(browser)))
+fn create_ui(browser: Rc<RefCell<Browser>>) -> Rc<RefCell<ui_gui::app::Gui>> {
+    Rc::new(RefCell::new(ui_gui::app::Gui::new(browser)))
 }
 
 fn main() {

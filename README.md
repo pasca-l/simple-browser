@@ -17,9 +17,4 @@ $ docker compose up && docker compose exec browser bash
 (container) $ cargo run --bin="cui_browser" --features="cui"
 ```
 
-- open with GUI (Graphical User Interface)
-```shell
-(container) $ cargo run --bin="gui_browser" --features="gui"
-```
-
 3. Get HTML file from server, by accessing `http://server:8080/`.
